@@ -70,7 +70,15 @@ class SalesInvoiceReport extends StatelessWidget {
                     controller: toDateController,
                   ),
                 ),
-                const SizedBox(width: 8),
+
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+
+            Row(
+              children: [
                 Expanded(
                   child: TextField(
                     controller: invoiceController,
@@ -88,14 +96,7 @@ class SalesInvoiceReport extends StatelessWidget {
                   ),
 
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-
-            Row(
-              children: [
+                SizedBox(width: 8,),
                 Expanded(
                   child: Column(
                     children: [
@@ -116,7 +117,13 @@ class SalesInvoiceReport extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
+
+              ],
+            ),
+
+            SizedBox(height: 10,),
+            Row(
+              children: [
 
                 /// Store Dropdown
                 Expanded(
@@ -152,7 +159,6 @@ class SalesInvoiceReport extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 16),
 
             Expanded(
