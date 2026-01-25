@@ -40,56 +40,56 @@ class AppDrawer extends StatelessWidget {
             title: const Text(
               "Store Details",
               style: TextStyle(
-                fontSize: 16,          // ⬇ reduced from 18
+                fontSize: 14,          // ⬇ reduced from 18
                 fontWeight: FontWeight.w600,
               ),
             ),
             children: [
               ListTile(
-                leading: const Icon(Icons.edit, size: 18), // ⬇ smaller icon
+                leading: const Icon(Icons.edit, size: 12), // ⬇ smaller icon
                 title: const Text(
                   "Update Store",
-                  style: TextStyle(fontSize: 14),          // ⬇ reduced
+                  style: TextStyle(fontSize: 12),          // ⬇ reduced
                 ),
                 onTap: () {
                   Get.toNamed(AppRoutes.updateStoreDetails);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.edit, size: 18),
+                leading: const Icon(Icons.edit, size: 12),
                 title: const Text(
                   "Update Store Documents",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 12),
                 ),
                 onTap: () {
                   Get.toNamed(AppRoutes.updateStoreDocuments);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.person, size: 18),
+                leading: const Icon(Icons.person, size: 12),
                 title: const Text(
                   "Add Store User",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 12),
                 ),
                 onTap: () {
                   Get.toNamed(AppRoutes.userStoreDetails);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.person, size: 18),
+                leading: const Icon(Icons.person, size: 12),
                 title: const Text(
                   "Get User Store",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 12),
                 ),
                 onTap: () {
                   Get.toNamed(AppRoutes.getStoreUser);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.list, size: 18),
+                leading: const Icon(Icons.list, size: 12),
                 title: const Text(
                   "Store List",
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 12),
                 ),
                 onTap: () {
                   Get.toNamed(AppRoutes.storeList);
@@ -105,7 +105,7 @@ class AppDrawer extends StatelessWidget {
             title: const Text(
               "Pharmacy Management",
                 style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),
             ),
@@ -122,7 +122,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.add_box),
                     title: const Text("Add Item",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -132,7 +132,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.search),
                     title: const Text("Get Item",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -146,14 +146,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.view_in_ar),
                 title: const Text("Rack Management",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.add_circle_outline),
                     title: const Text("Add Rack",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -163,7 +163,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.list_alt),
                     title: const Text("View Racks",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
                     ),),
                     onTap: () {
                       Get.toNamed(AppRoutes.getRackManagement);
@@ -176,14 +176,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.receipt_long),
                 title: const Text("Purchase Invoice",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.receipt),
                     title: const Text("Purchase Invoice",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -193,7 +193,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.analytics),
                     title: const Text("Purchase Report",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
                     ),),
                     onTap: () {
                       Get.toNamed(AppRoutes.getPurchaseReport);
@@ -206,14 +206,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.point_of_sale),
                 title: const Text("Sales Invoice",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.request_quote),
                     title: const Text("Sales Invoice",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -223,7 +223,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.request_quote),
                     title: const Text("Sales Report",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -237,14 +237,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.price_change),
                 title: const Text("Price Management",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.tune),
                     title: const Text("Price Manage",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
                     ),),
                     onTap: () {
                       Get.toNamed(AppRoutes.priceManage);
@@ -257,14 +257,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.warehouse),
                 title: const Text("Stock Management",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.assessment),
                     title: const Text("Stock Report",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -275,7 +275,7 @@ class AppDrawer extends StatelessWidget {
                     leading: const Icon(Icons.playlist_add_check),
                     title: const Text("Manual Stock",
                       style: TextStyle(
-                        fontSize: 14,          // ⬇ reduced from 18
+                        fontSize: 12,          // ⬇ reduced from 18
                       ),),
                     onTap: () {
                       Get.toNamed(AppRoutes.manualStock);
@@ -288,14 +288,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.account_balance),
                 title: const Text("GST Report",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.summarize),
                     title: const Text("GST Report",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
                     ),),
                     onTap: () {
                       Get.toNamed(AppRoutes.gstReport);
@@ -307,14 +307,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.people_alt),
                 title: const Text("Supplier Management",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.manage_accounts),
                     title: const Text("Search Supplier",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -339,14 +339,14 @@ class AppDrawer extends StatelessWidget {
               ExpansionTile(
                 leading: const Icon(Icons.people_alt),
                 title: const Text("Customer Management",style: TextStyle(
-                  fontSize: 16,          // ⬇ reduced from 18
+                  fontSize: 14,          // ⬇ reduced from 18
                   fontWeight: FontWeight.w600,
                 ),),
                 children: [
                   ListTile(
                     leading: const Icon(Icons.manage_accounts),
                     title: const Text("Customer Management",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -357,7 +357,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.manage_accounts),
                     title: const Text("Customer Order",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
@@ -368,7 +368,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     leading: const Icon(Icons.manage_accounts),
                     title: const Text("Online Order",style: TextStyle(
-                      fontSize: 14,          // ⬇ reduced from 18
+                      fontSize: 12,          // ⬇ reduced from 18
 
                     ),),
                     onTap: () {
