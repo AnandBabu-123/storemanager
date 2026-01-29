@@ -121,9 +121,19 @@ class SalesInvoiceView extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: controller.customerNameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Customer Name",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
                     ),
                   ),
                 ),
@@ -132,9 +142,19 @@ class SalesInvoiceView extends StatelessWidget {
                   child: TextField(
                     controller: controller.customerPhoneController,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Customer Phone Number",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
                     ),
                   ),
                 ),
@@ -271,18 +291,26 @@ class SalesInvoiceView extends StatelessWidget {
                         : TextFormField(
                       controller: entry.value,
                       readOnly: isReadOnly(entry.key),
-                      decoration:  InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12), // 👈 radius here
-                        ),
+                      decoration: InputDecoration(
                         isDense: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blue),
+                        ),
                       ),
                       onChanged: (_) {
-                        // 🔥 recalc when user edits
                         form.calculateAll();
                       },
                     ),
                   ),
+
                 ],
               ),
             );
@@ -339,8 +367,6 @@ class SalesInvoiceView extends StatelessWidget {
       },
       onSelected: (selection) {
         textController.text = selection;
-
-        /// 🔹 AUTO-FILL ITEM DETAILS
         controller.searchItemByName(selection, form);
       },
       fieldViewBuilder: (context, fieldController, focusNode, _) {
@@ -349,16 +375,28 @@ class SalesInvoiceView extends StatelessWidget {
         return TextFormField(
           controller: fieldController,
           focusNode: focusNode,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
             isDense: true,
             hintText: "Search Item",
+
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.blue),
+            ),
           ),
           onChanged: (v) => textController.text = v,
         );
       },
     );
   }
+
 
   /// 🔹 STORE DROPDOWN
   Widget _buildDropdownOnly({

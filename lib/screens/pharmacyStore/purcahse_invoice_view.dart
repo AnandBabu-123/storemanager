@@ -245,26 +245,59 @@ class PurcahseInvoiceView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 160, child: Text(label)),
-          Expanded(child: field),
+          SizedBox(
+            width: 160,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12), // 🔥 radius 12
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: field,
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _rows(String label, Widget field) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 4),
-        field,
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 160,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12), // 🔥 radius 12
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: field,
+            ),
+          ),
+        ],
+      ),
     );
   }
+
+
   Widget _textFieldControllers(TextEditingController controller) {
     return SizedBox(
       height: 12, // 👈 reduce box height (try 36–44)
@@ -278,7 +311,7 @@ class PurcahseInvoiceView extends StatelessWidget {
             vertical: 38, // 👈 reduce vertical padding
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
@@ -290,8 +323,10 @@ class PurcahseInvoiceView extends StatelessWidget {
   Widget _textFieldController(TextEditingController controller) {
     return TextFormField(
       controller: controller,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
+      decoration:  InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
         isDense: true,
         contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       ),
