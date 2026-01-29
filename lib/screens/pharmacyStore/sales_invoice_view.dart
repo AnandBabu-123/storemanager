@@ -271,8 +271,10 @@ class SalesInvoiceView extends StatelessWidget {
                         : TextFormField(
                       controller: entry.value,
                       readOnly: isReadOnly(entry.key),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration:  InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12), // 👈 radius here
+                        ),
                         isDense: true,
                       ),
                       onChanged: (_) {

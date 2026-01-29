@@ -20,6 +20,7 @@ class UpdateDetailsController extends GetxController {
 
   var isEditable = true.obs;
   var isActiveStore = false.obs;
+  RxBool isStoreVerified = false.obs;
 
 
   /// STORE CATEGORY
@@ -309,6 +310,7 @@ class UpdateDetailsController extends GetxController {
 
     if (store == null) return;
 
+
     selectedStore.value = store;
 
     /// find matching business type
@@ -332,14 +334,11 @@ class UpdateDetailsController extends GetxController {
     gstController.text = store.gstNumber;
 
     /// 🔹 STATUS LOGIC
-    if (store.status == "ACTIVE") {
-      isEditable.value = false;     // 🔒 lock fields
-      isActiveStore.value = true;  // for UI color
+    if (store?.storeVerifiedStatus == "true") {
+      isEditable.value = false;     // 🔒 lock
     } else {
-      isEditable.value = true;     // ✏️ allow edit
-      isActiveStore.value = false;
+      isEditable.value = true;      // ✏️ allow edit
     }
-
     /// 🔹 SAVE SELECTED STORE ID
     await prefs.saveStoredUserId(store.userIdStoreId);
 

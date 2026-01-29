@@ -136,34 +136,41 @@ class LoginView extends StatelessWidget {
                           const SizedBox(height: 16),
 
                           /// 🔵 LOGIN BUTTON
-                          ElevatedButton(
-                            onPressed: () {
-                            //  controller.login();
-                              if (controller.isFormValid()) {
-                                controller.login();
-                              }
-                            },
-
-
-                            style: ElevatedButton.styleFrom(
-                              padding:
-                              const EdgeInsets.symmetric(vertical: 14),
-                              backgroundColor:
-                              const Color(0xFF1976D2), // blue
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              "Sign In",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
+                        Obx(() => ElevatedButton(
+                          onPressed: controller.loading.value
+                              ? null // disables button while loading
+                              : () {
+                            if (controller.isFormValid()) {
+                              controller.login();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            backgroundColor: const Color(0xFF1976D2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
+                          child: controller.loading.value
+                              ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                              : const Text(
+                            "Sign In",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
 
-                          const SizedBox(height: 20),
+
+                        const SizedBox(height: 20),
 
                           GestureDetector(
                             onTap: () {

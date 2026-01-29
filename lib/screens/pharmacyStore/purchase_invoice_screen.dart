@@ -581,8 +581,11 @@ class PurchaseInvoiceScreen extends StatelessWidget {
                       return TextFormField(
                         controller: entry.value,
                         readOnly: isAutoField,
+
                         decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12), // 👈 radius here
+                          ),
                           isDense: true,
                           errorText: hasError ? "Required" : null,
                           enabledBorder: OutlineInputBorder(

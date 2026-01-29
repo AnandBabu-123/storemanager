@@ -47,23 +47,38 @@ class UpdateStoreDocumentsView extends StatelessWidget {
             ),
             const SizedBox(height: 6),
 
-            Obx(() {
-              final verifiedStores = controller.stores
-                  .where((store) => store.storeVerifiedStatus == "true")
-                  .toList();
+            // Obx(() {
+            //   final verifiedStores = controller.stores
+            //       .where((store) => store.storeVerifiedStatus == "true")
+            //       .toList();
+            //
+            //   return DropdownButtonFormField<StoreItem>(
+            //     value: controller.selectedStore.value,
+            //     items: verifiedStores.map((store) {
+            //       return DropdownMenuItem<StoreItem>(
+            //         value: store,
+            //         child: Text("${store.id} - ${store.name}"),
+            //       );
+            //     }).toList(),
+            //     onChanged: controller.onStoreSelected, // keep your logic
+            //     decoration: _inputDecoration("Select Store"),
+            //   );
+            // }),
 
+            Obx(() {
               return DropdownButtonFormField<StoreItem>(
                 value: controller.selectedStore.value,
-                items: verifiedStores.map((store) {
+                items: controller.stores.map((store) {
                   return DropdownMenuItem<StoreItem>(
                     value: store,
                     child: Text("${store.id} - ${store.name}"),
                   );
                 }).toList(),
-                onChanged: controller.onStoreSelected, // keep your logic
+                onChanged: controller.onStoreSelected,
                 decoration: _inputDecoration("Select Store"),
               );
             }),
+
 
             const SizedBox(height: 20),
 
@@ -98,20 +113,27 @@ class UpdateStoreDocumentsView extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// 🔹 UPLOAD BUTTON
-            SizedBox(
+            Obx(() => SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: controller.uploadDocuments,
+                onPressed: controller.isStoreVerified.value
+                    ? controller.uploadDocuments
+                    : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF90EE90),
+                  backgroundColor: controller.isStoreVerified.value
+                      ? const Color(0xFF90EE90)
+                      : Colors.grey,
                 ),
-                child: const Text(
-                  "Upload Documents",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                child: Text(
+                  controller.isStoreVerified.value
+                      ? "Upload Documents"
+                      : "Store Not Verified",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
+            )),
+
           ],
         ),
       ),
@@ -136,35 +158,48 @@ class UpdateStoreDocumentsView extends StatelessWidget {
     required Rxn<File> selectedFile,
     required Function(File) onFileSelected,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
+    return Obx(() {
+      final isEnabled = controller.isStoreVerified.value;
 
-        Obx(() {
-          return GestureDetector(
-            onTap: () => _showPickDialog(
-              onFileSelected: onFileSelected,
-            ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isEnabled ? Colors.black : Colors.grey,
+              )),
+          const SizedBox(height: 6),
+
+          GestureDetector(
+            onTap: isEnabled
+                ? () => _showPickDialog(onFileSelected: onFileSelected)
+                : null,
             child: Container(
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
+                border: Border.all(
+                    color: isEnabled ? Colors.grey : Colors.grey.shade300),
                 borderRadius: BorderRadius.circular(10),
+                color: isEnabled ? Colors.white : Colors.grey.shade100,
               ),
               alignment: Alignment.centerLeft,
               child: Text(
-                selectedFile.value?.path.split("/").last ?? "Select file",
-                style: const TextStyle(fontSize: 14),
+                selectedFile.value?.path.split("/").last ??
+                    (isEnabled ? "Select file" : "Store not verified"),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: isEnabled ? Colors.black : Colors.grey,
+                ),
               ),
             ),
-          );
-        }),
-      ],
-    );
+          ),
+        ],
+      );
+    });
   }
+
   void _showPickDialog({required Function(File) onFileSelected}) {
     Get.bottomSheet(
       Container(
