@@ -160,7 +160,8 @@ class SignupController extends GetxController {
               "OTP sent successfully",
         );
 
-      } else if (response.statusCode == 500) {
+      }
+      else if (response.statusCode == 400) {
         Get.snackbar(
           "Server Error",
           response.data['responseMessage'] ?? "Internal server error",

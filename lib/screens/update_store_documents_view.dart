@@ -47,37 +47,18 @@ class UpdateStoreDocumentsView extends StatelessWidget {
             ),
             const SizedBox(height: 6),
 
-            // Obx(() {
-            //   final verifiedStores = controller.stores
-            //       .where((store) => store.storeVerifiedStatus == "true")
-            //       .toList();
-            //
-            //   return DropdownButtonFormField<StoreItem>(
-            //     value: controller.selectedStore.value,
-            //     items: verifiedStores.map((store) {
-            //       return DropdownMenuItem<StoreItem>(
-            //         value: store,
-            //         child: Text("${store.id} - ${store.name}"),
-            //       );
-            //     }).toList(),
-            //     onChanged: controller.onStoreSelected, // keep your logic
-            //     decoration: _inputDecoration("Select Store"),
-            //   );
-            // }),
 
-            Obx(() {
-              return DropdownButtonFormField<StoreItem>(
-                value: controller.selectedStore.value,
-                items: controller.stores.map((store) {
-                  return DropdownMenuItem<StoreItem>(
-                    value: store,
-                    child: Text("${store.id} - ${store.name}"),
-                  );
-                }).toList(),
-                onChanged: controller.onStoreSelected,
-                decoration: _inputDecoration("Select Store"),
-              );
-            }),
+            Obx(() => DropdownButtonFormField<StoreItem>(
+              value: controller.selectedStore.value,
+              items: controller.stores.map((store) {
+                return DropdownMenuItem<StoreItem>(
+                  value: store,
+                  child: Text("${store.id} - ${store.name}"),
+                );
+              }).toList(),
+              onChanged: controller.onStoredSelected, // ✅ FIXED NAME
+              decoration: _inputDecoration("Select Store"),
+            )),
 
 
             const SizedBox(height: 20),
@@ -118,19 +99,22 @@ class UpdateStoreDocumentsView extends StatelessWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: controller.isStoreVerified.value
-                    ? controller.uploadDocuments
-                    : null,
+                    ? null
+                    : controller.uploadDocuments,
+
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: controller.isStoreVerified.value
-                      ? const Color(0xFF90EE90)
-                      : Colors.grey,
+                      ? Colors.grey
+                      : const Color(0xFF90EE90),
+
                 ),
                 child: Text(
                   controller.isStoreVerified.value
-                      ? "Upload Documents"
-                      : "Store Not Verified",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                      ? "Store Already Verified"
+                      : "Upload Documents",
                 ),
+
               ),
             )),
 
@@ -159,7 +143,7 @@ class UpdateStoreDocumentsView extends StatelessWidget {
     required Function(File) onFileSelected,
   }) {
     return Obx(() {
-      final isEnabled = controller.isStoreVerified.value;
+      final isEnabled = !controller.isStoreVerified.value;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +154,6 @@ class UpdateStoreDocumentsView extends StatelessWidget {
                 color: isEnabled ? Colors.black : Colors.grey,
               )),
           const SizedBox(height: 6),
-
           GestureDetector(
             onTap: isEnabled
                 ? () => _showPickDialog(onFileSelected: onFileSelected)
@@ -187,7 +170,9 @@ class UpdateStoreDocumentsView extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 selectedFile.value?.path.split("/").last ??
-                    (isEnabled ? "Select file" : "Store not verified"),
+                    (isEnabled
+                        ? "Select file"
+                        : "Store already verified"),
                 style: TextStyle(
                   fontSize: 14,
                   color: isEnabled ? Colors.black : Colors.grey,
@@ -199,6 +184,8 @@ class UpdateStoreDocumentsView extends StatelessWidget {
       );
     });
   }
+
+
 
   void _showPickDialog({required Function(File) onFileSelected}) {
     Get.bottomSheet(

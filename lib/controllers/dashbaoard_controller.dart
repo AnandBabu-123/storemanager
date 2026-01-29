@@ -103,10 +103,17 @@ class DashboardController extends GetxController {
     selectedStore.value = store;
 
     // verified
-    isVerified.value =
-        store.storeVerifiedStatus == true ||
-            store.storeVerifiedStatus == "true";
+    // isVerified.value =
+    //     store.storeVerifiedStatus == true ||
+    //         store.storeVerifiedStatus == "true";
 
+    /// ✅ Verified check (safe for bool/string/int)
+    isVerified.value =
+        store.storeVerifiedStatus.toString().toLowerCase().trim() == 'true' ||
+            store.storeVerifiedStatus.toString().trim() == '1';
+
+    /// 🔥 EDIT PERMISSION NOW BASED ON VERIFIED STATUS
+    canEdit.value = !isVerified.value;
     // fill fields
     storeNameCtrl.text = store.name ?? "";
     locationCtrl.text = store.location ?? "";
@@ -121,8 +128,8 @@ class DashboardController extends GetxController {
     alternateContactCtrl.text = store.secondaryContact ?? "";
     emailCtrl.text = store.ownerEmail ?? "";
 
-    // edit permission
-    canEdit.value = store.status != "ACTIVE";
+    // // edit permission
+    // canEdit.value = store.status != "ACTIVE";
   }
 
 

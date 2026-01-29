@@ -306,6 +306,24 @@ class UpdateDetailsController extends GetxController {
     }
   }
 
+
+  void onStoredSelected(StoreItem? store) {
+    if (store == null) return;
+
+    selectedStore.value = store;
+
+    print("RAW storeVerifiedStatus: ${store.storeVerifiedStatus}");
+
+    isStoreVerified.value =
+        store.storeVerifiedStatus.toString().toLowerCase().trim() == 'true' ||
+            store.storeVerifiedStatus.toString().trim() == '1';
+
+
+    print("Selected Store Verifiedsss: ${isStoreVerified.value}");
+  }
+
+
+
   void onStoreSelected(StoreItem? store) async {
 
     if (store == null) return;
