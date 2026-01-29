@@ -43,10 +43,11 @@ android {
             useLegacyPackaging = true
         }
     }
-
     signingConfigs {
+
         create("release") {
             val keystorePath = System.getenv("KEYSTORE_FILE")
+
             if (keystorePath != null) {
                 storeFile = file(keystorePath)
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
@@ -56,10 +57,17 @@ android {
         }
     }
 
-
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+
+            val keystorePath = System.getenv("KEYSTORE_FILE")
+
+            signingConfig = if (keystorePath != null) {
+                signingConfigs.getByName("release")   // CI with secrets (future)
+            } else {
+                signingConfigs.getByName("debug")     // CI fallback NOW
+            }
+
             isMinifyEnabled = false
             isShrinkResources = false
 
@@ -69,6 +77,7 @@ android {
             )
         }
     }
+
 }
 
 flutter {
