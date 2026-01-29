@@ -161,6 +161,7 @@ class SignupController extends GetxController {
         );
 
       }
+
       else if (response.statusCode == 400) {
         Get.snackbar(
           "Server Error",
