@@ -249,6 +249,25 @@ class UpdateDetailsController extends GetxController {
 
 
   /// ---------------- STORE CATEGORY ----------------
+  // Future<void> fetchStoreCategory() async {
+  //   try {
+  //     isLoading.value = true;
+  //     await apiCalls.initializeDio();
+  //
+  //     final response = await apiCalls.getMethod(RouteUrls.storeCategory);
+  //
+  //     if (response.statusCode == 200 && response.data != null) {
+  //       final model = StoreCategoryDetailsModel.fromJson(response.data);
+  //       storeCategories.assignAll(model.storeCategoriesList);
+  //     }
+  //   } catch (e) {
+  //     debugPrint("fetchStoreCategory error: $e");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
+
+
   Future<void> fetchStoreCategory() async {
     try {
       isLoading.value = true;
@@ -258,10 +277,22 @@ class UpdateDetailsController extends GetxController {
 
       if (response.statusCode == 200 && response.data != null) {
         final model = StoreCategoryDetailsModel.fromJson(response.data);
-        storeCategories.assignAll(model.storeCategoriesList);
+
+        /// ✅ Filter only "Pharmacy"
+        final pharmacyList = model.storeCategoriesList
+            ?.where((e) => e.storeCategoryName == "Pharmacy")
+            .toList() ??
+            [];
+
+        storeCategories.assignAll(pharmacyList);
+
+        /// ✅ Auto-select Pharmacy
+        if (storeCategories.isNotEmpty) {
+          selectedStoreCategory.value = storeCategories.first;
+        }
       }
     } catch (e) {
-      debugPrint("fetchStoreCategory error: $e");
+      print("fetchStoreCategory error: $e");
     } finally {
       isLoading.value = false;
     }

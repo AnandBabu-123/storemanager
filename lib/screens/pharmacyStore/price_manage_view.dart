@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
+import 'package:flutter/services.dart';
 import '../../controllers/sales_invoice_controller.dart';
 import '../../model/user_pharmacy_model.dart' show Stores;
 
@@ -323,12 +323,12 @@ class PriceManageView extends StatelessWidget {
                                     controller: item.discountCtrl,
                                     enabled: item.isSelected.value,
                                   ),
-                                  _editableField(
+                                  _editableFields(
                                     label: "Offer Qty",
                                     controller: item.offerQtyCtrl,
                                     enabled: item.isSelected.value,
                                   ),
-                                  _editableField(
+                                  _editableFields(
                                     label: "Min Order Qty",
                                     controller: item.minOrderQtyCtrl,
                                     enabled: item.isSelected.value,
@@ -353,6 +353,8 @@ class PriceManageView extends StatelessWidget {
       ),
     );
   }
+
+
   Widget _editableField({
     required String label,
     required TextEditingController controller,
@@ -363,8 +365,41 @@ class PriceManageView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 4),
         child: TextFormField(
           controller: controller,
-          readOnly: !enabled, // ✅ FIX
+          readOnly: !enabled,
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly, // only numbers
+            LengthLimitingTextInputFormatter(2),    // max 2 digits
+          ],
+          decoration: InputDecoration(
+            labelText: label,
+            hintText: "0-99 %",
+            border: const OutlineInputBorder(),
+            isDense: true,
+            filled: !enabled,
+            fillColor: !enabled ? Colors.grey.shade200 : null,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _editableFields({
+    required String label,
+    required TextEditingController controller,
+    required bool enabled,
+  }) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: TextFormField(
+          controller: controller,
+          readOnly: !enabled,
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly, // only numbers
+            LengthLimitingTextInputFormatter(8),    // max 2 digits
+          ],
           decoration: InputDecoration(
             labelText: label,
             border: const OutlineInputBorder(),

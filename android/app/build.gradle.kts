@@ -44,39 +44,26 @@ android {
         }
     }
     signingConfigs {
-
         create("release") {
-            val keystorePath = System.getenv("KEYSTORE_FILE")
-
-            if (keystorePath != null) {
-                storeFile = file(keystorePath)
-                storePassword = System.getenv("KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("KEY_ALIAS")
-                keyPassword = System.getenv("KEY_PASSWORD")
-            }
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
         }
     }
 
     buildTypes {
         getByName("release") {
-
-            val keystorePath = System.getenv("KEYSTORE_FILE")
-
-            signingConfig = if (keystorePath != null) {
-                signingConfigs.getByName("release")   // CI with secrets (future)
-            } else {
-                signingConfigs.getByName("debug")     // CI fallback NOW
-            }
-
+            signingConfig = signingConfigs.getByName("release")   // ⭐ FORCE RELEASE KEY
             isMinifyEnabled = false
             isShrinkResources = false
-
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+
 
 }
 
