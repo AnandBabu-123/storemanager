@@ -20,7 +20,7 @@ class PurchaseInvoiceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("PurChase Invoice"),
+        title: const Text("Purchase Invoice"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -159,7 +159,7 @@ class PurchaseInvoiceScreen extends StatelessWidget {
                         style: const TextStyle(fontSize: 13),
                         keyboardType: TextInputType.phone,
                         decoration:  InputDecoration(
-                          labelText: "Supplier Code",
+                          labelText: "Varchar",
                           isDense: true,
                           contentPadding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 8),

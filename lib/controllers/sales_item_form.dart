@@ -15,6 +15,9 @@ class SalesItemForm {
   final purchaseRate = TextEditingController();
   final discount = TextEditingController();
 
+  final pakQuantity = TextEditingController();
+  final looseQuantity = TextEditingController();
+
   final afterDiscount = TextEditingController();
   final IGST = TextEditingController(text: "12"); // static
   final SGST = TextEditingController(text: "6");  // static
@@ -36,6 +39,8 @@ class SalesItemForm {
     "Brand": brand,
     "Batch No": batch,
     "Expiry Date": expiryDate,
+    "Pak Qty" :pakQuantity,
+    "Loose Qty":looseQuantity,
     "MRP": mrp,
     "Discount": discount,
     "After Discount": afterDiscount,

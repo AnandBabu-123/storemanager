@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get.dart';
 
 class PurchaseInvoiceItems {
   final itemName = TextEditingController();
@@ -15,7 +15,7 @@ class PurchaseInvoiceItems {
   final afterDiscount = TextEditingController();
   final hSNCode = TextEditingController();
 
-  final gstCtrl = TextEditingController();
+  final gstCtrl = TextEditingController(); // not used in calc now
   final igstCtrl = TextEditingController();
   final sgstCtrl = TextEditingController();
   final cgstCtrl = TextEditingController();
@@ -38,7 +38,7 @@ class PurchaseInvoiceItems {
     "Rack": rack,
     "Expiry Date": expiryDate,
     "MRP Purchase": mrpPurchase,
-    "PurChase Rate": purchaseRate,
+    "Purchase Rate": purchaseRate,
     "Discount": discount,
     "After Discount": afterDiscount,
     "Loose Qty": looseQty,
@@ -53,36 +53,7 @@ class PurchaseInvoiceItems {
     "SGST Amount": SGSTAmount,
     "CGST Amount": CGSTAmount,
     "Total Purchase Price": totalPurchasePrice,
-
   };
-
-  /// 🔹 false = intra-state, true = inter-state
-  bool isInterState = false;
-
-
-  void _calculateGSTSplit() {
-    final double gst = double.tryParse(gstCtrl.text) ?? 0;
-
-    if (gst <= 0) {
-      igstCtrl.clear();
-      sgstCtrl.clear();
-      cgstCtrl.clear();
-      return;
-    }
-
-    if (isInterState) {
-      // 🌍 Inter-state → IGST only
-      igstCtrl.text = gst.toStringAsFixed(2);
-      sgstCtrl.text = "0";
-      cgstCtrl.text = "0";
-    } else {
-      // 🏠 Intra-state → SGST + CGST
-      final half = gst / 2;
-      igstCtrl.text = "0";
-      sgstCtrl.text = half.toStringAsFixed(2);
-      cgstCtrl.text = half.toStringAsFixed(2);
-    }
-  }
 
   final Map<String, RxBool> fieldErrors = {};
 
@@ -91,12 +62,21 @@ class PurchaseInvoiceItems {
       fieldErrors[key] = false.obs;
     }
 
-    mrpPurchase.addListener(_calculateAfterDiscount);
+    /// 🔹 Calculations
     purchaseRate.addListener(_calculateAfterDiscount);
     discount.addListener(_calculateAfterDiscount);
-    gstCtrl.addListener(_calculateGSTSplit);
+
+    looseQty.addListener(_calculateTotalPurchase);
+    boxQty.addListener(_calculateTotalPurchase);
+    packQty.addListener(_calculateTotalPurchase);
+    afterDiscount.addListener(_calculateTotalPurchase);
+
+    igstCtrl.addListener(_calculateTaxAmounts);
   }
 
+  // --------------------------------------------------
+  // ✅ VALIDATION
+  // --------------------------------------------------
   bool validate() {
     bool isValid = true;
 
@@ -113,20 +93,56 @@ class PurchaseInvoiceItems {
   }
 
   // --------------------------------------------------
-  // ✅ After Discount calculation
+  // ✅ AFTER DISCOUNT
+  // After Discount = rate - (rate * discount / 100)
   // --------------------------------------------------
   void _calculateAfterDiscount() {
-    final double rate = double.tryParse(purchaseRate.text) ?? 0;
-    final double disc = double.tryParse(discount.text) ?? 0;
+    final rate = double.tryParse(purchaseRate.text) ?? 0;
+    final disc = double.tryParse(discount.text) ?? 0;
 
-    final double discountAmount = rate * (disc / 100);
-    final double result = rate - discountAmount;
-
+    final result = rate - (rate * disc / 100);
     afterDiscount.text = result.toStringAsFixed(2);
   }
 
   // --------------------------------------------------
-  // ✅ Clear all fields
+  // ✅ TOTAL PURCHASE PRICE
+  // (looseQty / packQty * afterDiscount) + boxQty * afterDiscount
+  // --------------------------------------------------
+  void _calculateTotalPurchase() {
+    final loose = double.tryParse(looseQty.text) ?? 0;
+    final box = double.tryParse(boxQty.text) ?? 0;
+    final pack = double.tryParse(packQty.text) ?? 1; // prevent divide-by-zero
+    final afterDisc = double.tryParse(afterDiscount.text) ?? 0;
+
+    final total =
+        ((loose / pack) * afterDisc) +
+            (box * afterDisc);
+
+    totalPurchasePrice.text = total.toStringAsFixed(2);
+
+    _calculateTaxAmounts(); // update tax automatically
+  }
+
+  // --------------------------------------------------
+  // ✅ TAX CALCULATION
+  // IGST = IGST% * total / 100
+  // SGST = IGST / 2
+  // CGST = IGST / 2
+  // --------------------------------------------------
+  void _calculateTaxAmounts() {
+    final total = double.tryParse(totalPurchasePrice.text) ?? 0;
+    final igstPercent = double.tryParse(igstCtrl.text) ?? 0;
+
+    final igstAmount = total * igstPercent / 100;
+    final half = igstAmount / 2;
+
+    IGSTAmount.text = igstAmount.toStringAsFixed(2);
+    SGSTAmount.text = half.toStringAsFixed(2);
+    CGSTAmount.text = half.toStringAsFixed(2);
+  }
+
+  // --------------------------------------------------
+  // ✅ CLEAR ALL FIELDS
   // --------------------------------------------------
   void clear() {
     for (final c in fields.values) {

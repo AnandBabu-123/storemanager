@@ -112,58 +112,58 @@ class SearchPharmacyUser extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.itemName ?? "-",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                            child: ExpansionTile(
+                              tilePadding:
+                              const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              childrenPadding: const EdgeInsets.all(12),
 
-                                  const SizedBox(height: 8),
-
-                                  _infoRow("Store ID", item.storeId),
-                                  _infoRow("Item Code", item.itemCode),
-                                  _infoRow("Category", item.itemCategory),
-                                  _infoRow("Sub Category", item.itemSubCategory),
-                                  _infoRow("Manufacturer", item.manufacturer),
-                                  _infoRow("Brand", item.brand),
-                                  _infoRow("GST", item.gst?.toString()),
-
-                                  const Divider(height: 20),
-
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          _openUpdateItemBottomSheet(context, item);
-                                        },
-                                        child: const Text("Update"),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          _openUploadBottomSheet(context, item);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 18,
-                                            vertical: 10,
-                                          ),
-                                        ),
-                                        child: const Text("Upload"),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              /// 🔹 TITLE (always visible)
+                              title: Text(
+                                item.itemName ?? "-",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+
+                              /// 🔽 EXPANDED CONTENT
+                              children: [
+                                _infoRow("Store ID", item.storeId),
+                                _infoRow("Item Code", item.itemCode),
+                                _infoRow("Category", item.itemCategory),
+                                _infoRow("Sub Category", item.itemSubCategory),
+                                _infoRow("Manufacturer", item.manufacturer),
+                                _infoRow("Brand", item.brand),
+                                _infoRow("GST", item.gst?.toString()),
+
+                                const Divider(height: 20),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        _openUpdateItemBottomSheet(context, item);
+                                      },
+                                      child: const Text("Update"),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        _openUploadBottomSheet(context, item);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 18,
+                                          vertical: 10,
+                                        ),
+                                      ),
+                                      child: const Text("Upload"),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -175,10 +175,11 @@ class SearchPharmacyUser extends StatelessWidget {
                   ],
                 );
               }),
-            ),
+            )
 
 
-          ],
+
+    ],
         ),
       ),
     );
