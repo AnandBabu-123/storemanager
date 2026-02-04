@@ -43,6 +43,22 @@ class ManualStockItemForm {
     "Stock Value Pur Rate": stockValuePurRate,
   };
 
+  bool validateItem() {
+    for (final entry in fields.entries) {
+      final key = entry.key;
+      final value = entry.value.text.trim();
+
+      // Skip auto calculated or optional fields if any
+      if (key == "MRP" || key == "Amount") continue;
+
+      if (value.isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
   /// clear all fields
   void clear() {
     for (final c in fields.values) {

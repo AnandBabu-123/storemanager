@@ -341,102 +341,120 @@ class AddPharmacy extends StatelessWidget {
             bottom: MediaQuery.of(context).viewInsets.bottom + 16,
           ),
           child: SingleChildScrollView( // ✅ Make it scrollable when keyboard opens
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            child: Form(
+              key: pharmacyController.addStoreFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-                /// 🔹 Store & Item Code
-                _buildDropdownWithTextField(
-                  leftLabel: "Stores",
-                  rightLabel: "Item Code",
-                  controller: pharmacyController,
-                  rightController: pharmacyController.itemCode,
-                ),
+                  /// 🔹 Store & Item Code
+                  _buildDropdownWithTextField(
+                    leftLabel: "Stores",
+                    rightLabel: "Item Code",
+                    controller: pharmacyController,
+                    rightController: pharmacyController.itemCode,
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                /// 🔹 Item Name & Category
-                _buildTwoFieldRow(
-                  leftLabel: "Item Name",
-                  leftHint: "",
-                  leftController: pharmacyController.itemName,
-                  rightLabel: "Item Category",
-                  rightHint: "",
-                  rightController: pharmacyController.itemCategory,
-                ),
+                  /// 🔹 Item Name & Category
+                  _buildTwoFieldRow(
+                    leftLabel: "Item Name",
+                    leftHint: "",
+                    leftController: pharmacyController.itemName,
+                    rightLabel: "Item Category",
+                    rightHint: "",
+                    rightController: pharmacyController.itemCategory,
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                /// 🔹 Sub-Category & Manufacturer
-                _buildTwoFieldRow(
-                  leftLabel: "Item Sub-Category",
-                  leftHint: "",
-                  leftController: pharmacyController.itemSubCategory,
-                  rightLabel: "Manufacturer",
-                  rightHint: "",
-                  rightController: pharmacyController.manufacturer,
-                ),
+                  /// 🔹 Sub-Category & Manufacturer
+                  _buildTwoFieldRow(
+                    leftLabel: "Item Sub-Category",
+                    leftHint: "",
+                    leftController: pharmacyController.itemSubCategory,
+                    rightLabel: "Manufacturer",
+                    rightHint: "",
+                    rightController: pharmacyController.manufacturer,
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                /// 🔹 Brand & GST
-                _buildTwoFieldRow(
-                  leftLabel: "Brand",
-                  leftHint: "",
-                  leftController: pharmacyController.brand,
-                  rightLabel: "GST",
-                  rightHint: "",
-                  rightController: pharmacyController.gstNumber,
-                ),
+                  /// 🔹 Brand & GST
+                  _buildTwoFieldRow(
+                    leftLabel: "Brand",
+                    leftHint: "",
+                    leftController: pharmacyController.brand,
+                    rightLabel: "GST",
+                    rightHint: "",
+                    rightController: pharmacyController.gstNumber,
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                /// 🔹 HSN Code & Is Scheduled
-                _buildTextAndYesNoDropdown(
-                  leftLabel: "HSN Code",
-                  leftController: pharmacyController.hsnCode,
-                  rightLabel: "Is Scheduled",
-                  selectedValue: pharmacyController.isScheduled,
-                ),
+                  /// 🔹 HSN Code & Is Scheduled
+                  _buildTextAndYesNoDropdown(
+                    leftLabel: "HSN Code",
+                    leftController: pharmacyController.hsnCode,
+                    rightLabel: "Is Scheduled",
+                    selectedValue: pharmacyController.isScheduled,
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                /// 🔹 Scheduled Category & Is Narcotic
-                _buildTextAndYesNoDropdown(
-                  leftLabel: "Scheduled Category",
-                  leftController: pharmacyController.scheduledCategory,
-                  rightLabel: "Is Narcotic",
-                  selectedValue: pharmacyController.isNarcotic,
-                ),
+                  /// 🔹 Scheduled Category & Is Narcotic
+                  _buildTextAndYesNoDropdown(
+                    leftLabel: "Scheduled Category",
+                    leftController: pharmacyController.scheduledCategory,
+                    rightLabel: "Is Narcotic",
+                    selectedValue: pharmacyController.isNarcotic,
+                  ),
 
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                /// 🔹 Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => pharmacyController.addPharmacyUser(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF90EE90),
+                  /// 🔹 Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Cancel"),
                         ),
-                        child: const Text("Save"),
                       ),
-                    ),
-                  ],
-                ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (!pharmacyController.addStoreFormKey.currentState!.validate()) {
+                              Get.snackbar(
+                                "Missing Fields",
+                                "Please fill all required fields",
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: Colors.red.shade100,
+                                colorText: Colors.red.shade900,
+                              );
+                              return;
+                            }
 
-                const SizedBox(height: 60),
-              ],
+                            final success = await pharmacyController.addPharmacyUser();
+
+
+                          },
+
+                          child: const Text("Save"),
+                        ),
+                      ),
+
+
+                    ],
+                  ),
+
+                  const SizedBox(height: 60),
+                ],
+              ),
             ),
           ),
         );
@@ -445,35 +463,6 @@ class AddPharmacy extends StatelessWidget {
   }
 
 
-  Widget _buildRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// LEFT LABEL
-          SizedBox(
-            width: 140, // controls left alignment
-            child: Text(
-              "$label :",
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-
-          /// RIGHT VALUE
-          Expanded(
-            child: Text(
-              value ?? "-",
-              style: const TextStyle(color: Colors.black54),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
   Widget _buildDropdownWithTextField({
     required String leftLabel,
     required String rightLabel,
@@ -501,6 +490,7 @@ class AddPharmacy extends StatelessWidget {
 
                 Obx(() {
                   return DropdownButtonFormField<Stores>(
+                    validator: (value) => value == null ? "Store required" : null,
                     value: controller.selectedStore.value,
                     isExpanded: true,
                     hint: const Text("Select Store"),
@@ -541,14 +531,17 @@ class AddPharmacy extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                TextField(
+                TextFormField(
                   controller: rightController,
+                  validator: (value) =>
+                  value == null || value.trim().isEmpty ? "Item Code required" : null,
                   decoration: const InputDecoration(
                     hintText: "Enter item code",
                     border: OutlineInputBorder(),
                     isDense: true,
                   ),
                 ),
+
               ],
             ),
           ),
@@ -581,13 +574,17 @@ class AddPharmacy extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                TextField(
+                TextFormField(
                   controller: leftController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  validator: (v) =>
+                  v == null || v.trim().isEmpty ? "$leftLabel required" : null,
+                  decoration: InputDecoration(
+                    labelText: leftLabel,
+                    border: const OutlineInputBorder(),
                     isDense: true,
                   ),
                 ),
+
               ],
             ),
           ),
@@ -610,6 +607,7 @@ class AddPharmacy extends StatelessWidget {
                 Obx(() {
                   return DropdownButtonFormField<String>(
                     value: selectedValue.value,
+                    validator: (v) => v == null ? "$rightLabel required" : null,
                     hint: const Text("Select"),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -646,62 +644,53 @@ class AddPharmacy extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-
-          /// LEFT FIELD
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  leftLabel,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                TextField(
-                  controller: leftController,
-                  decoration: InputDecoration(
-                    hintText: leftHint,
-                    border: const OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                ),
-              ],
+            child: TextFormField(
+              controller: leftController,
+              validator: (v) =>
+              v == null || v.trim().isEmpty ? "$leftLabel required" : null,
+              decoration: InputDecoration(
+                labelText: leftLabel,
+                hintText: leftHint,
+                border: const OutlineInputBorder(),
+                isDense: true,
+              ),
             ),
           ),
-
           const SizedBox(width: 12),
-
-          /// RIGHT FIELD
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  rightLabel,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                TextField(
-                  controller: rightController,
-                  decoration: InputDecoration(
-                    hintText: rightHint,
-                    border: const OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                ),
-              ],
+            child: TextFormField(
+              controller: rightController,
+              validator: (v) {
+                final value = v?.trim() ?? "";
+
+                if (value.isEmpty) {
+                  return "$rightLabel required";
+                }
+
+                if (rightLabel == "GST") {
+                  final gstRegex = RegExp(r'^[0-9A-Z]+$'); // letters + numbers only
+                  if (!gstRegex.hasMatch(value.toUpperCase())) {
+                    return "GST must contain only letters and numbers";
+                  }
+                }
+
+                return null; // ✅ no error
+              },
+
+              decoration: InputDecoration(
+                labelText: rightLabel,
+                hintText: rightHint,
+                border: const OutlineInputBorder(),
+                isDense: true,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+
 
 
 

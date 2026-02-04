@@ -77,6 +77,8 @@ class AddPharmacyController extends GetxController {
   var gstCtrls = <TextEditingController>[].obs;
   var hsnCtrls = <TextEditingController>[].obs;
 
+  final addStoreFormKey = GlobalKey<FormState>();
+
 
   // Search results per card
 
@@ -98,6 +100,68 @@ class AddPharmacyController extends GetxController {
       purChaseItemForms.removeAt(index);
     }
   }
+
+  bool validateInvoiceHeader() {
+
+    if (invoiceNoCtrl.text.trim().isEmpty) {
+      Get.snackbar("Missing", "Invoice No is required");
+      return false;
+    }
+
+    if (supplierCodeCtrl.text.trim().isEmpty) {
+      Get.snackbar("Missing", "Varchar is required");
+      return false;
+    }
+
+    if (supplierNameCtrl.text.trim().isEmpty) {
+      Get.snackbar("Missing", "Supplier Name is required");
+      return false;
+    }
+
+    if (purchaseDateCtrl.text.trim().isEmpty) {
+      Get.snackbar("Missing", "Purchase Date is required");
+      return false;
+    }
+
+    if (selectedStore.value == null) {
+      Get.snackbar("Missing", "Please select store");
+      return false;
+    }
+
+    return true;
+  }
+
+  bool validateSingleItem(PurchaseInvoiceItems form) {
+    bool isValid = true;
+
+    form.fields.forEach((key, controller) {
+      final value = controller.text.trim();
+
+      // Skip auto-calculated fields
+      if (key == "After Discount" ||
+          key == "IGST %" ||
+          key == "SGST %" ||
+          key == "CGST %") {
+        return;
+      }
+
+      if (value.isEmpty) {
+        form.fieldErrors[key]!.value = true;
+        isValid = false;
+      } else {
+        form.fieldErrors[key]!.value = false;
+      }
+    });
+
+    if (!isValid) {
+      Get.snackbar("Error", "Please fill all item fields");
+    }
+
+    return isValid;
+  }
+
+
+
 
   Future<void> addPurChaseInvoice() async {
     try {

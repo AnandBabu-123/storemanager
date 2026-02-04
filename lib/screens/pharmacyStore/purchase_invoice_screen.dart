@@ -157,7 +157,6 @@ class PurchaseInvoiceScreen extends StatelessWidget {
                       child: TextField(
                         controller: pharmacyController.supplierCodeCtrl,
                         style: const TextStyle(fontSize: 13),
-                        keyboardType: TextInputType.phone,
                         decoration:  InputDecoration(
                           labelText: "Varchar",
                           isDense: true,
@@ -432,21 +431,21 @@ class PurchaseInvoiceScreen extends StatelessWidget {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () async {
-                  // bool allValid = true;
+                  // /// ✅ Validate header FIRST
+                  // if (!pharmacyController.validateInvoiceHeader()) return;
                   //
-                  // for (final item in pharmacyController.purChaseItemForms) {
-                  //   if (!item.validate()) {
-                  //     allValid = false;
-                  //   }
-                  // }
-                  //
-                  // if (!allValid) {
-                  //   Get.snackbar("Error", "Please fill all mandatory fields",
-                  //       backgroundColor: Colors.red.shade100);
-                  //   return;
-                  // }
+                  // /// ✅ Validate ONLY this item
+                  // if (!pharmacyController.validateSingleItem(form)) return;
 
-                  // ✅ if valid → call API
+                  /// 🔴 STEP 1 — HEADER VALIDATION (MANDATORY ALWAYS)
+                  final headerValid = pharmacyController.validateInvoiceHeader();
+                  if (!headerValid) return;   // 🚨 STOP HERE
+
+                  /// 🔴 STEP 2 — ONLY THIS ITEM VALIDATION
+                  final itemValid = pharmacyController.validateSingleItem(form);
+                  if (!itemValid) return;     // 🚨 STOP HERE
+
+
                   await pharmacyController.addPurChaseInvoice();
                 },
                 child: const Text("Save"),

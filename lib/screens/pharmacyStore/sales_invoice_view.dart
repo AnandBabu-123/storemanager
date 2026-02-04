@@ -25,174 +25,166 @@ class SalesInvoiceView extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            /// STORE DROPDOWN
-            _buildDropdownOnly(
-              label: "Stores",
-              controller: controller,
-            ),
-
-            const SizedBox(height: 8),
-
-            /// 🔹 STORE DETAILS (EXPAND / COLLAPSE)
-            Obx(() {
-              final store = controller.selectedStore.value;
-
-              if (store == null) return const SizedBox();
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  /// 🔹 HEADER (CLICK TO TOGGLE)
-                  GestureDetector(
-                    onTap: () =>
-                    controller.isStoreExpanded.value =
-                    !controller.isStoreExpanded.value,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.green),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Store Details",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Icon(
-                            controller.isStoreExpanded.value
-                                ? Icons.keyboard_arrow_up
-                                : Icons.keyboard_arrow_down,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  /// 🔹 DETAILS BODY
-                  if (controller.isStoreExpanded.value)
-                    Container(
-                      margin: const EdgeInsets.only(top: 6),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade300,
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          _infoRow("Store ID", store.id),
-                          _infoRow("Name", store.name),
-                          _infoRow("Type", store.type),
-                          _infoRow("Location", store.location),
-                          _infoRow("District", store.district),
-                          _infoRow("State", store.state),
-                          _infoRow("PinCode", store.pincode),
-                          _infoRow("Owner", store.owner),
-                          _infoRow("Owner Contact", store.ownerContact),
-                          _infoRow("GST Number", store.gstNumber),
-                        ],
-                      ),
-                    ),
-                ],
-              );
-            }),
-
-
-            const SizedBox(height: 12),
-
-            /// CUSTOMER ROW
-            Row(
+      body: SafeArea(
+        child: Form(
+          key: controller.salesFormKey,
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller.customerNameController,
-                    decoration: InputDecoration(
-                      labelText: "Customer Name",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+
+                /// STORE DROPDOWN
+                _buildDropdownOnly(
+                  label: "Stores",
+                  controller: controller,
+                ),
+
+                const SizedBox(height: 8),
+
+                /// STORE DETAILS
+                Obx(() {
+                  final store = controller.selectedStore.value;
+                  if (store == null) return const SizedBox();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () =>
+                        controller.isStoreExpanded.value =
+                        !controller.isStoreExpanded.value,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.green),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Store Details",
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              Icon(controller.isStoreExpanded.value
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down),
+                            ],
+                          ),
+                        ),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.blue),
+
+                      if (controller.isStoreExpanded.value)
+                        Container(
+                          margin: const EdgeInsets.only(top: 6),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(color: Colors.grey.shade300, blurRadius: 4),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              _infoRow("Store ID", store.id),
+                              _infoRow("Name", store.name),
+                              _infoRow("Type", store.type),
+                              _infoRow("Location", store.location),
+                              _infoRow("District", store.district),
+                              _infoRow("State", store.state),
+                              _infoRow("PinCode", store.pincode),
+                              _infoRow("Owner", store.owner),
+                              _infoRow("Owner Contact", store.ownerContact),
+                              _infoRow("GST Number", store.gstNumber),
+                            ],
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+
+                const SizedBox(height: 12),
+
+                /// CUSTOMER ROW
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: controller.customerNameController,
+                        decoration: InputDecoration(
+                          labelText: "Customer Name",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        validator: (v) =>
+                        v == null || v.trim().isEmpty ? "Customer name required" : null,
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    controller: controller.customerPhoneController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      labelText: "Customer Phone Number",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: TextFormField(
+                        controller: controller.customerPhoneController,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          labelText: "Customer Phone Number",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) return "Phone number required";
+                          if (v.length < 10) return "Invalid phone number";
+                          return null;
+                        },
                       ),
                     ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                /// 🔥 ITEMS LIST (IMPORTANT FIX)
+                Obx(() {
+                  return ListView.builder(
+                    itemCount: controller.itemForms.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return _itemContainer(
+                        context,
+                        controller,
+                        controller.itemForms[index],
+                        index,
+                      );
+                    },
+                  );
+                }),
+
+                const SizedBox(height: 12),
+
+                /// ADD ITEM BUTTON
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton.icon(
+                    onPressed: controller.addItem,
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add Item"),
                   ),
                 ),
+
+                const SizedBox(height: 20),
+
+                /// SAVE BUTTON
+
+
+
               ],
             ),
-
-            const SizedBox(height: 16),
-
-            /// ITEMS LIST
-            Expanded(
-              child: Obx(() {
-                return ListView.builder(
-                  itemCount: controller.itemForms.length,
-                  itemBuilder: (context, index) {
-                    return _itemContainer(
-                      context,
-                      controller,
-                      controller.itemForms[index],
-                      index,
-                    );
-                  },
-                );
-              }),
-            ),
-
-            /// ADD ITEM BUTTON
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: controller.addItem,
-                icon: const Icon(Icons.add),
-                label: const Text("Add Item"),
-              ),
-            ),
-            SizedBox(height: 30,)
-          ],
+          ),
         ),
       ),
+
     );
   }
 
@@ -274,6 +266,8 @@ class SalesInvoiceView extends StatelessWidget {
 
           /// FORM FIELDS
           ...form.fields.entries.map((entry) {
+            final isExpiry = entry.key == "Expiry Date";
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
@@ -285,73 +279,156 @@ class SalesInvoiceView extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
+
                   Expanded(
                     child: entry.key == "Item Name"
                         ? _itemAutoComplete(controller, form, entry.value)
+
+                    /// 🔹 EXPIRY DATE PICKER
+                        : isExpiry
+                        ? GestureDetector(
+                      onTap: () async {
+                        FocusScope.of(context).unfocus();
+
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+
+                        if (picked != null) {
+                          entry.value.text =
+                          "${picked.day.toString().padLeft(2, '0')}-"
+                              "${picked.month.toString().padLeft(2, '0')}-"
+                              "${picked.year}";
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: entry.value,
+                          decoration: InputDecoration(
+                            hintText: "Select Expiry Date",
+                            suffixIcon: const Icon(Icons.calendar_today),
+                            isDense: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Expiry Date required";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    )
+
+                    /// 🔹 NORMAL TEXT FIELDS
                         : TextFormField(
                       controller: entry.value,
                       readOnly: isReadOnly(entry.key),
                       decoration: InputDecoration(
                         isDense: true,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.blue),
-                        ),
+                            borderRadius: BorderRadius.circular(12)),
                       ),
-                      onChanged: (_) {
-                        form.calculateAll();
+                      validator: (value) {
+                        if (isReadOnly(entry.key)) return null;
+
+                        if (value == null || value.trim().isEmpty) {
+                          return "${entry.key} required";
+                        }
+                        return null;
                       },
+                      onChanged: (_) => form.calculateAll(),
                     ),
                   ),
-
                 ],
               ),
             );
           }).toList(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                       //   controller.clearItemForm(form);
-                        },
-                        child: const Text("Cancel"),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () async {
-                          // bool allValid = true;
-                          //
-                          // for (final item in pharmacyController.purChaseItemForms) {
-                          //   if (!item.validate()) {
-                          //     allValid = false;
-                          //   }
-                          // }
-                          //
-                          // if (!allValid) {
-                          //   Get.snackbar("Error", "Please fill all mandatory fields",
-                          //       backgroundColor: Colors.red.shade100);
-                          //   return;
-                          // }
 
-                          // ✅ if valid → call API
-                          await controller.addSalesInvoice();
-                        },
-                        child: const Text("Save"),
-                      ),
-                    ],
-                  ),
+          /// ACTION BUTTONS
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: const Text("Cancel"),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  /// STORE REQUIRED
+                  if (controller.selectedStore.value == null) {
+                    Get.snackbar("Error", "Please select Store",
+                        backgroundColor: Colors.red.shade100);
+                    return;
+                  }
+
+                  /// CUSTOMER REQUIRED
+                  if (controller.customerNameController.text.trim().isEmpty ||
+                      controller.customerPhoneController.text.trim().isEmpty) {
+                    Get.snackbar("Error", "Customer details required",
+                        backgroundColor: Colors.red.shade100);
+                    return;
+                  }
+
+                  /// AT LEAST ONE ITEM REQUIRED
+                  if (controller.itemForms.isEmpty) {
+                    Get.snackbar("Error", "Add at least one item",
+                        backgroundColor: Colors.red.shade100);
+                    return;
+                  }
+
+                  /// VALIDATE EACH ITEM
+                  for (int i = 0; i < controller.itemForms.length; i++) {
+                    final item = controller.itemForms[i];
+
+                    if (!item.validateItem()) {
+                      Get.snackbar(
+                        "Error",
+                        "Please fill all fields in Item ${i + 1}",
+                        backgroundColor: Colors.red.shade100,
+                      );
+                      return;
+                    }
+                  }
+
+                  /// ALL GOOD
+                  await controller.addSalesInvoice();
+                },
+                child: const Text("Save"),
+              )
+            ],
+          ),
         ],
       ),
     );
+
   }
+  Future<void> _pickExpiryDate(
+      BuildContext context,
+      TextEditingController controller,
+      ) async {
+    DateTime now = DateTime.now();
+
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year - 5),
+      lastDate: DateTime(now.year + 10),
+    );
+
+    if (picked != null) {
+      controller.text =
+      "${picked.day.toString().padLeft(2, '0')}-"
+          "${picked.month.toString().padLeft(2, '0')}-"
+          "${picked.year}";
+    }
+  }
+
 
   Widget _itemAutoComplete(
       SalesInVoiceController controller,
@@ -411,6 +488,7 @@ class SalesInvoiceView extends StatelessWidget {
         const SizedBox(height: 4),
         Obx(() {
           return DropdownButtonFormField<Stores>(
+            validator: (value) => value == null ? "Store required" : null,
             value: controller.selectedStore.value,
             hint: const Text("Select Store"),
             isExpanded: true,

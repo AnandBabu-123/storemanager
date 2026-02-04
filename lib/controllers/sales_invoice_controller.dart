@@ -35,6 +35,7 @@ class SalesInVoiceController extends GetxController{
   final TextEditingController fromDateCtrl = TextEditingController();
   final TextEditingController toDateCtrl = TextEditingController();
 
+  final salesFormKey = GlobalKey<FormState>();
 
 
   RxList<SaleGst> saleGstList = <SaleGst>[].obs;
@@ -71,6 +72,8 @@ class SalesInVoiceController extends GetxController{
       expandedIndexes.add(index);
     }
   }
+
+
 
 
   /// Dropdown values

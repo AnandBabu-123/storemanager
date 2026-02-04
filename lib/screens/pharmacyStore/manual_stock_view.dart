@@ -226,53 +226,44 @@ class ManualStockView extends StatelessWidget {
 
           /// FORM FIELDS
           ...form.fields.entries.map((entry) {
+            final isExpiry = entry.key == "Expiry Date";
+            final isOnline = entry.key == "Online";
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
                   SizedBox(
                     width: 160,
-                    child: Text(
-                      entry.key,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                    child: Text(entry.key,
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
                   ),
                   Expanded(
                     child: entry.key == "Item Name"
                         ? _itemAutoCompletes(controller, form, entry.value)
-                        : entry.key == "Online"
+
+                    /// 🔹 ONLINE DROPDOWN
+                        : isOnline
                         ? DropdownButtonFormField<String>(
                       value: entry.value.text.isNotEmpty
                           ? entry.value.text
                           : null,
                       items: const [
-                        DropdownMenuItem(
-                          value: "Yes",
-                          child: Text("Yes"),
-                        ),
-                        DropdownMenuItem(
-                          value: "No",
-                          child: Text("No"),
-                        ),
+                        DropdownMenuItem(value: "Yes", child: Text("Yes")),
+                        DropdownMenuItem(value: "No", child: Text("No")),
                       ],
-                      onChanged: (value) {
-                        entry.value.text = value ?? "";
-                      },
+                      onChanged: (value) => entry.value.text = value ?? "",
+                      validator: (v) =>
+                      v == null || v.isEmpty ? "Required" : null,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
                     )
-                        : entry.key == "Expiry Date"
-                        ? TextFormField(
-                      controller: entry.value,
-                      readOnly: true, // prevent manual typing
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                        hintText: "Select Expiry Date",
-                        suffixIcon: Icon(Icons.calendar_today),
-                      ),
+
+                    /// 🔹 EXPIRY DATE PICKER
+                        : isExpiry
+                        ? GestureDetector(
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
@@ -286,19 +277,37 @@ class ManualStockView extends StatelessWidget {
                               pickedDate.toIso8601String().split('T').first;
                         }
                       },
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: entry.value,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            isDense: true,
+                            hintText: "Select Expiry Date",
+                            suffixIcon: Icon(Icons.calendar_today),
+                          ),
+                          validator: (v) =>
+                          v == null || v.isEmpty ? "Required" : null,
+                        ),
+                      ),
                     )
+
+                    /// 🔹 NORMAL TEXT FIELD
                         : TextFormField(
                       controller: entry.value,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
+                      validator: (v) =>
+                      v == null || v.trim().isEmpty ? "Required" : null,
                     ),
                   ),
                 ],
               ),
             );
           }).toList(),
+
 
 
           const SizedBox(height: 12),
@@ -314,25 +323,40 @@ class ManualStockView extends StatelessWidget {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () async {
-                  // bool allValid = true;
-                  //
-                  // for (final item in pharmacyController.purChaseItemForms) {
-                  //   if (!item.validate()) {
-                  //     allValid = false;
-                  //   }
-                  // }
-                  //
-                  // if (!allValid) {
-                  //   Get.snackbar("Error", "Please fill all mandatory fields",
-                  //       backgroundColor: Colors.red.shade100);
-                  //   return;
-                  // }
+                  /// STORE REQUIRED
+                  if (controller.selectedStore.value == null) {
+                    Get.snackbar("Error", "Please select Store",
+                        backgroundColor: Colors.red.shade100);
+                    return;
+                  }
 
-                  // ✅ if valid → call API
+                  /// AT LEAST ONE ITEM
+                  if (controller.manualItemForms.isEmpty) {
+                    Get.snackbar("Error", "Add at least one item",
+                        backgroundColor: Colors.red.shade100);
+                    return;
+                  }
+
+                  /// VALIDATE EACH ITEM
+                  for (int i = 0; i < controller.manualItemForms.length; i++) {
+                    final item = controller.manualItemForms[i];
+
+                    if (!item.validateItem()) {
+                      Get.snackbar(
+                        "Error",
+                        "Please fill all fields in Item ${i + 1}",
+                        backgroundColor: Colors.red.shade100,
+                      );
+                      return;
+                    }
+                  }
+
+                  /// ✅ ALL GOOD
                   await controller.addManualInvoice();
                 },
                 child: const Text("Save"),
-              ),
+              )
+
             ],
           ),
         ],

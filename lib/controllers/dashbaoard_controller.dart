@@ -22,6 +22,10 @@ class DashboardController extends GetxController {
   Rx<Stores?> selectedStore = Rx<Stores?>(null);
   RxBool canEdit = true.obs;
 
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final updateStoreFormKey = GlobalKey<FormState>();
+
+
 
   var email = "";
   var isLoading = false.obs;
@@ -230,76 +234,24 @@ class DashboardController extends GetxController {
 
   void onStoreCategoryChanged(StoreCategory? category) {
     selectedStoreCategory.value = category;
-
-    // Clear previous selection
     selectedBusinessType.value = null;
+    filteredBusinessTypes.clear();
 
-    if (category == null) {
-      filteredBusinessTypes.clear();
-      return;
-    }
+    if (category == null) return;
 
-    /// If Pharmacy → show ALL business types
     if (category.storeCategoryName == "Pharmacy") {
       filteredBusinessTypes.assignAll(allBusinessTypes);
-    }
-    /// Else → show ONLY Retailer
-    else {
+    } else {
       filteredBusinessTypes.assignAll(
         allBusinessTypes.where((e) => e.businessName == "Retailer").toList(),
       );
     }
 
-    // ✅ Automatically select the first available business type
     if (filteredBusinessTypes.isNotEmpty) {
       selectedBusinessType.value = filteredBusinessTypes.first;
     }
   }
 
-
-  // void onStoreCategoryChanged(StoreCategory? category) {
-  //   selectedStoreCategory.value = category;
-  //   selectedBusinessType.value = null;
-  //
-  //   if (category == null) {
-  //     filteredBusinessTypes.clear();
-  //     return;
-  //   }
-  //
-  //   /// If Pharmacy → show ALL business types
-  //   if (category.storeCategoryName == "Pharmacy") {
-  //     filteredBusinessTypes.assignAll(allBusinessTypes);
-  //   }
-  //   /// Else → show ONLY Retailer
-  //   else {
-  //     filteredBusinessTypes.assignAll(
-  //       allBusinessTypes
-  //           .where((e) => e.businessName == "Retailer")
-  //           .toList(),
-  //     );
-  //   }
-  // }
-
-
-  // Future<void> fetchStoreCategory() async {
-  //   try {
-  //     isLoading.value = true;
-  //     await apiCalls.initializeDio();
-  //
-  //     final response = await apiCalls.getMethod(
-  //       RouteUrls.storeCategory,
-  //     );
-  //
-  //     if (response.statusCode == 200 && response.data != null) {
-  //       final model = StoreCategoryDetailsModel.fromJson(response.data);
-  //       storeCategories.assignAll(model.storeCategoriesList);
-  //     }
-  //   } catch (e) {
-  //     print("fetchStoreCategory error: $e");
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 
   Future<void> fetchStoreCategory() async {
     try {
@@ -311,7 +263,7 @@ class DashboardController extends GetxController {
       if (response.statusCode == 200 && response.data != null) {
         final model = StoreCategoryDetailsModel.fromJson(response.data);
 
-        /// ✅ Filter only "Pharmacy"
+        /// Only Pharmacy visible in dropdown
         final pharmacyList = model.storeCategoriesList
             ?.where((e) => e.storeCategoryName == "Pharmacy")
             .toList() ??
@@ -319,10 +271,7 @@ class DashboardController extends GetxController {
 
         storeCategories.assignAll(pharmacyList);
 
-        /// ✅ Auto-select Pharmacy
-        if (storeCategories.isNotEmpty) {
-          selectedStoreCategory.value = storeCategories.first;
-        }
+        selectedStoreCategory.value = null; // 👈 important
       }
     } catch (e) {
       print("fetchStoreCategory error: $e");
@@ -330,6 +279,7 @@ class DashboardController extends GetxController {
       isLoading.value = false;
     }
   }
+
 
   String getBusinessName(String? businessTypeId) {
     if (businessTypeId == null || businessTypeId.isEmpty) return "-";

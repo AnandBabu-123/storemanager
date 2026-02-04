@@ -22,6 +22,7 @@ class UpdateDetailsController extends GetxController {
   var isActiveStore = false.obs;
   RxBool isStoreVerified = false.obs;
 
+  final formKeyUpdateStore = GlobalKey<FormState>();
 
   /// STORE CATEGORY
   var storeCategories = <StoreCategory>[].obs;
@@ -170,10 +171,14 @@ class UpdateDetailsController extends GetxController {
     try {
       isLoading.value = true;
 
-      final userId = await prefs.getUserId();
-      debugPrint(" USER ID => $userId");
+      // 🔵 SHOW LOADER
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
 
       if (selectedStore.value == null) {
+        Get.back(); // close loader
         Get.snackbar("Error", "Please select a store");
         return;
       }
@@ -195,57 +200,32 @@ class UpdateDetailsController extends GetxController {
         "ownerContact": mobileNumberController.text.trim(),
         "secondaryContact": store.secondaryContact ?? "",
         "ownerEmail": emailController.text.trim(),
-        "storeVerificationStatus": storeVerificationStatus, // from API
+        "storeVerificationStatus": storeVerificationStatus,
         "businessType": selectedBusinessType.value?.businessName ?? "",
-
       };
-
-      debugPrint(" REQUEST BODY:");
-      debugPrint(const JsonEncoder.withIndent('  ').convert(data));
 
       final response = await apiCalls.putMethod(
         RouteUrls.updateStoreDetails,
         data,
       );
 
-      debugPrint(" RESPONSE:");
-      debugPrint(response.data.toString());
+      // 🔴 ALWAYS CLOSE LOADER
+      if (Get.isDialogOpen ?? false) Get.back();
 
-      if (response.statusCode == 200 && response.data != null) {
-        final resData = response.data;
-
-        final bool isSuccess =
-            resData['status'] == true ||
-                (resData['message'] != null &&
-                    resData['message']
-                        .toString()
-                        .toLowerCase()
-                        .contains("success"));
-
-        if (isSuccess) {
-          Get.snackbar(
-            "Success",
-            resData['message'] ?? "Store updated successfully",
-          );
-
-        } else {
-          Get.snackbar(
-            "Error",
-            resData['responseMessage'] ??
-                resData['message'] ??
-                "Update failed",
-          );
-        }
+      if (response.statusCode == 200) {
+        Get.snackbar("Success", "Store updated successfully");
       } else {
-        Get.snackbar("Error", "Failed to update store");
+        Get.snackbar("Error", "Update failed");
       }
     } catch (e) {
-      debugPrint(" updateStoreDetails error: $e");
+      // 🔴 CLOSE LOADER ON ERROR TOO
+      if (Get.isDialogOpen ?? false) Get.back();
       Get.snackbar("Error", "Something went wrong");
     } finally {
       isLoading.value = false;
     }
   }
+
 
 
   /// ---------------- STORE CATEGORY ----------------
